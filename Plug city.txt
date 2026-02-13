@@ -1,0 +1,42 @@
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="assets/img/logo-footer.png">
+
+    <title>Contacts | Eko Hotels &amp; Suites</title>
+	  
+	<link href="https://fonts.googleapis.com/css2?family=Cormorant:wght@400;500;600;700&amp;family=Poppins:wght@200;300;400;500;600;700;900&amp;display=swap" rel="stylesheet"> 
+
+    <!-- CSS Plugins -->
+	<link href="assets/plugins/ionicons/css/ionicons.min.css" rel="stylesheet" type="text/css">
+
+    <!-- CSS Global -->
+    <!--build:css assets/css/theme.min.css-->
+    <link rel="stylesheet" href="assets/css/app.css">
+    <!--endbuild-->
+
+	<!-- ASKSUITE CODE START --> <script id="script-infochat" src="https://cdn.asksuite.com/infochat.js?dataConfig=https://control.asksuite.com/api/companies/eko-hotel"></script> <!-- ASKSUITE CODE END -->  
+  <link rel="stylesheet" type="text/css" href="https://cdn.asksuite.com/infochat.css?v=1770734024029" id="infochat"><script type="text/javascript" charset="UTF-8" src="https://maps.googleapis.com/maps-api-v3/api/js/63/14d/intl/en_gb/common.js"></script><script type="text/javascript" charset="UTF-8" src="https://maps.googleapis.com/maps-api-v3/api/js/63/14d/intl/en_gb/util.js"></script></head>
+
+
+
+<section class="section__header" id="section__header">
+    	<div class="container">
+    	  <div class="row">
+    	    <div class="col-sm-12">
+    	    	<div class="welcome__content">
+					<h2 class="welcome_content__title">Contact us</h2>
+
+					  <!-- Breadcrumbs -->
+					  <ol class="breadcrumb">
+						<li><a href="/">Home</a></li>
+						<li class="active">Contact</li>
+					  </ol>
+
+    				</div> <!-- .welcome__content -->
+    	    </div>
+    	  </div> <!-- / .row -->
+    	</div> <!-- / .container -->
+			<div class="home__bg contacts__bg"></div>
+    </section>
