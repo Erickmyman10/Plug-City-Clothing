@@ -9,7 +9,71 @@
 :root{--black:#0a0a12;--white:#F5F2ED;--red:#FF6B35;--accent:#FFBE0B;--teal:#06D6A0;--purple:#7B2FBE;--navy:#1A1A2E;--gray:#13131F;--gray-mid:#1E1E2E;--gray-light:#8888AA;--gold:#FFBE0B;--ff-d:'Bebas Neue',sans-serif;--ff-s:'Playfair Display',serif;--ff-m:'Space Mono',monospace;--ff-b:'Crimson Pro',serif;}
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 html{scroll-behavior:smooth;}
-body{background:var(--navy);color:var(--white);font-family:var(--ff-b);overflow-x:hidden;cursor:none;}
+body{background:var(--navy);color:var(--white);font-family:var(--ff-b);overflow-x:hidden;cursor:none;opacity:0;transition:opacity 0.8s ease;}
+body.loaded{opacity:1;}
+
+/* ===== PAGE TRANSITIONS ===== */
+.page-transition-overlay{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:linear-gradient(135deg, var(--purple) 0%, var(--navy) 50%, var(--red) 100%);
+  z-index:10000;
+  pointer-events:none;
+  opacity:0;
+  transition:opacity 0.5s cubic-bezier(0.4, 0.0, 0.2, 1);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.page-transition-overlay.active{
+  opacity:1;
+  pointer-events:all;
+}
+.page-transition-text{
+  font-family:var(--ff-d);
+  font-size:clamp(40px, 6vw, 80px);
+  letter-spacing:8px;
+  color:var(--accent);
+  text-align:center;
+  animation:pulse-text 0.8s ease-in-out;
+}
+@keyframes pulse-text{
+  0%, 100%{transform:scale(1);opacity:0.8;}
+  50%{transform:scale(1.05);opacity:1;}
+}
+
+/* Smooth page fade-in */
+.page{
+  animation:fadeInPage 0.6s cubic-bezier(0.4, 0.0, 0.2, 1);
+}
+@keyframes fadeInPage{
+  from{opacity:0;transform:translateY(20px);}
+  to{opacity:1;transform:translateY(0);}
+}
+
+/* Enhanced transitions for interactive elements */
+nav{
+  transition:all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+}
+button, a, .pcard, .citem, .gitem, .rcard, .iitem{
+  transition:all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+}
+.pcard:hover, .citem:hover, .gitem:hover, .rcard:hover{
+  transform:translateY(-4px);
+}
+.cart-sidebar{
+  transition:right 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+.cart-count{
+  animation:pulse-badge 0.5s cubic-bezier(0.4, 0.0, 0.2, 1);
+}
+@keyframes pulse-badge{
+  0%, 100%{transform:scale(1);}
+  50%{transform:scale(1.3);}
+}
 .cursor{position:fixed;width:10px;height:10px;background:linear-gradient(135deg,var(--accent),var(--red));border-radius:50%;pointer-events:none;z-index:99999;transform:translate(-50%,-50%);mix-blend-mode:difference;}
 .cursor-ring{position:fixed;width:32px;height:32px;border:1px solid rgba(245,242,237,.4);border-radius:50%;pointer-events:none;z-index:99998;transform:translate(-50%,-50%);transition:left .1s,top .1s;}
 ::-webkit-scrollbar{width:2px;} ::-webkit-scrollbar-thumb{background:linear-gradient(135deg,var(--accent),var(--red));}
@@ -62,13 +126,21 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1002;padding:18px 48px;display:f
 .ss{font-family:var(--ff-d);font-size:clamp(40px,5vw,72px);letter-spacing:4px;}
 /* PRODUCTS */
 .sec{padding:100px 48px;}
-.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:2px;}
-.pcard{position:relative;overflow:hidden;background:var(--gray);cursor:pointer;transition:transform .3s;}
-.pcard:hover{transform:translateY(-4px);}
-.pimg{width:100%;aspect-ratio:3/4;background:var(--gray-mid);position:relative;overflow:hidden;}
-.pimg img{width:100%;height:100%;object-fit:cover;transition:transform .5s;}
-.pcard:hover .pimg img{transform:scale(1.04);}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:24px;}
+.pcard{position:relative;overflow:hidden;background:var(--gray);cursor:pointer;transition:transform .3s;border:1px solid var(--gray-mid);}
+.pcard:hover{transform:translateY(-8px);border-color:var(--accent);}
+.pimg{width:100%;aspect-ratio:3/4;background:#000;position:relative;overflow:hidden;padding:15px;}
+.pimg-f,.pimg-b{width:100%;height:100%;object-fit:contain;position:absolute;top:0;left:0;padding:15px;transition:opacity .4s ease,transform .5s ease;}
+.pimg-f{opacity:1;z-index:2;}
+.pimg-b{opacity:0;z-index:1;}
+.pcard:hover .pimg-f{opacity:0;transform:scale(1.08);}
+.pcard:hover .pimg-b{opacity:1;transform:scale(1.08);}
 .pbadge{position:absolute;top:14px;left:14px;background:linear-gradient(135deg,var(--purple),var(--red));color:var(--white);font-family:var(--ff-m);font-size:9px;letter-spacing:3px;padding:4px 10px;text-transform:uppercase;z-index:2;}
+.pfb-f,.pfb-b{position:absolute;top:14px;left:14px;font-family:var(--ff-m);font-size:8px;letter-spacing:3px;padding:5px 12px;text-transform:uppercase;z-index:10;transition:opacity .3s ease;}
+.pfb-f{background:linear-gradient(135deg,var(--accent),var(--red));color:#000;}
+.pfb-b{background:linear-gradient(135deg,var(--teal),var(--purple));color:#fff;opacity:0;}
+.pcard:hover .pfb-f{opacity:0;}
+.pcard:hover .pfb-b{opacity:1;}
 .poverlay{position:absolute;inset:0;background:rgba(5,5,5,.82);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;opacity:0;transition:opacity .3s;z-index:3;}
 .pcard:hover .poverlay{opacity:1;}
 .obtn{background:var(--white);color:var(--black);padding:12px 0;border:none;cursor:pointer;font-family:var(--ff-d);font-size:16px;letter-spacing:3px;width:78%;transition:all .2s;}
@@ -144,11 +216,12 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1002;padding:18px 48px;display:f
 .rloc{font-size:12px;color:var(--gray-light);}
 .rstar{color:var(--accent);font-size:12px;margin-bottom:4px;}
 /* INSTA */
-.igrid{display:grid;grid-template-columns:repeat(6,1fr);gap:2px;}
-.iitem{aspect-ratio:1;background:var(--gray-mid);overflow:hidden;position:relative;cursor:pointer;}
-.iitem img{width:100%;height:100%;object-fit:cover;transition:transform .4s;}
-.iitem:hover img{transform:scale(1.06);}
-.iov{position:absolute;inset:0;background:rgba(255,107,53,.65);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .3s;font-size:22px;}
+.igrid{display:grid;grid-template-columns:repeat(6,1fr);gap:16px;padding:0 20px;}
+.iitem{aspect-ratio:3/4;background:var(--gray-mid);overflow:hidden;position:relative;cursor:pointer;border:2px solid var(--gray-mid);transition:all .3s;}
+.iitem:hover{border-color:var(--accent);transform:scale(1.02);}
+.iitem img{width:100%;height:100%;object-fit:contain;padding:10px;background:#000;transition:transform .4s;}
+.iitem:hover img{transform:scale(1.05);}
+.iov{position:absolute;inset:0;background:rgba(255,107,53,.75);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .3s;font-size:22px;}
 .iitem:hover .iov{opacity:1;}
 /* SHOP */
 .shop-hero{height:38vh;display:flex;align-items:flex-end;padding:60px 48px;background:linear-gradient(to right,rgba(5,5,5,.92) 40%,transparent),var(--gray);position:relative;overflow:hidden;margin-top:80px;}
@@ -397,36 +470,167 @@ footer{background:var(--black);border-top:1px solid var(--gray-mid);padding:80px
 .fpb{background:var(--gray);border:1px solid var(--gray-mid);padding:5px 10px;font-family:var(--ff-m);font-size:9px;letter-spacing:1px;color:var(--gray-light);}
 .fi{opacity:1;transform:none;transition:opacity .8s ease,transform .8s ease;}
 .fi.anim{opacity:0;transform:translateY(40px);} .fi.anim.vis{opacity:1;transform:translateY(0);}
-@media(max-width:900px){
-  nav{padding:16px 20px;}
+/* ===== COMPREHENSIVE MEDIA QUERIES FOR ALL SCREEN SIZES ===== */
+
+/* Desktop Large (1920px+) */
+@media(min-width:1920px){
+  nav{padding:24px 80px;}
+  .sec,.gsec,.lsec{padding:120px 80px;}
+  .hero h1{font-size:140px!important;}
+  .stitle{font-size:80px!important;}
+}
+
+/* Desktop (1200px - 1919px) - Uses default styles */
+
+/* Laptop/Tablet Landscape (900px - 1199px) */
+@media(max-width:1199px) and (min-width:900px){
+  nav{padding:18px 40px;}
+  .sec,.gsec,.lsec{padding:80px 40px;}
+  .pgrid{grid-template-columns:repeat(3,1fr);}
+  .shop-layout{grid-template-columns:220px 1fr;}
+  .chkgrid{grid-template-columns:1fr 320px;}
+  .fgrid{grid-template-columns:2fr 1fr 1fr 1fr;gap:50px;}
+}
+
+/* Tablet (768px - 899px) */
+@media(max-width:899px) and (min-width:768px){
+  nav{padding:16px 32px;}
+  .nav-links{display:none;}
+  .hamburger{display:flex;}
+  .hero-content{padding:0 32px;}
+  .hero-side,.hero-badge{display:none;}
+  .hero h1{font-size:80px!important;}
+  .sec,.gsec,.lsec{padding:70px 32px;}
+  .stitle{font-size:56px!important;}
+  .cgrid{grid-template-columns:1fr 1fr;height:auto;}
+  .citem:first-child{grid-row:span 1;}
+  .citem{min-height:220px;}
+  .lsec{grid-template-columns:1fr;gap:40px;}
+  .rgrid{grid-template-columns:repeat(2,1fr);}
+  .igrid{grid-template-columns:repeat(4,1fr);gap:12px;}
+  .ggrid{grid-template-columns:repeat(3,1fr);}
+  .gitem:nth-child(1),.gitem:nth-child(6),.gitem:nth-child(11){grid-column:span 2;}
+  .fgrid{grid-template-columns:1fr 1fr;gap:40px;}
+  .shop-layout{grid-template-columns:1fr;}
+  .shop-sidebar{border-right:none;border-bottom:1px solid var(--gray-mid);padding:24px;}
+  .pdpage{grid-template-columns:1fr;}
+  .pgal{position:relative;top:0;height:50vh;}
+  .pdi{padding:50px 32px;}
+  .chkgrid{grid-template-columns:1fr;}
+  .chksum{position:relative;top:0;}
+  .fgrid2{grid-template-columns:1fr;}
+  .fgroup.full{grid-column:span 1;}
+  .adpage{grid-template-columns:1fr;}
+  .adside{border-right:none;border-bottom:1px solid var(--gray-mid);}
+  .adsgrid{grid-template-columns:repeat(2,1fr);}
+  .cwin{width:90%;right:5%;}
+  .chkpage{padding:100px 32px 60px;}
+  .pgrid{grid-template-columns:repeat(2,1fr);}
+  .cart-sidebar{width:380px;}
+}
+
+/* Mobile Large (576px - 767px) */
+@media(max-width:767px) and (min-width:576px){
+  nav{padding:14px 24px;}
   .nav-links{display:none;}
   .hamburger{display:flex;}
   .hero-content{padding:0 24px;}
   .hero-side,.hero-badge{display:none;}
-  .sec,.gsec,.lsec{padding:60px 20px;}
+  .hero h1{font-size:60px!important;}
+  .sec,.gsec,.lsec{padding:60px 24px;}
+  .stitle{font-size:48px!important;}
   .cgrid{grid-template-columns:1fr;height:auto;}
   .citem:first-child{grid-row:span 1;}
   .citem{min-height:200px;}
   .lsec{grid-template-columns:1fr;gap:40px;}
   .rgrid{grid-template-columns:1fr;}
-  .igrid{grid-template-columns:repeat(3,1fr);}
+  .igrid{grid-template-columns:repeat(3,1fr);gap:10px;}
   .ggrid{grid-template-columns:repeat(2,1fr);}
-  .gitem:nth-child(1),.gitem:nth-child(6){grid-column:span 1;aspect-ratio:1;}
-  .fgrid{grid-template-columns:1fr 1fr;gap:40px;}
+  .gitem:nth-child(1),.gitem:nth-child(6),.gitem:nth-child(11){grid-column:span 2;}
+  .fgrid{grid-template-columns:1fr 1fr;gap:30px;}
   .shop-layout{grid-template-columns:1fr;}
   .shop-sidebar{display:none;}
   .pdpage{grid-template-columns:1fr;}
   .pgal{position:relative;top:0;height:60vw;}
-  .pdi{padding:40px 20px;}
+  .pdi{padding:40px 24px;}
+  .pdn{font-size:40px!important;}
+  .pdpr{font-size:36px!important;}
   .chkgrid{grid-template-columns:1fr;}
   .fgrid2{grid-template-columns:1fr;}
   .fgroup.full{grid-column:span 1;}
   .adpage{grid-template-columns:1fr;}
   .adside{display:none;}
   .adsgrid{grid-template-columns:1fr 1fr;}
-  .cwin{width:90%;right:5%;}
-  .chkpage{padding:100px 20px 60px;}
-  .pgrid{grid-template-columns:repeat(auto-fill,minmax(240px,1fr));}
+  .cwin{width:100%;right:0;bottom:0;height:100%;}
+  .chkpage{padding:100px 24px 60px;}
+  .pgrid{grid-template-columns:1fr;}
+  .cart-sidebar{width:100%;}
+  .mnl{font-size:40px;}
+}
+
+/* Mobile Small (0 - 575px) */
+@media(max-width:575px){
+  nav{padding:12px 16px;}
+  .nav-logo{font-size:18px;letter-spacing:4px;}
+  .nav-links{display:none;}
+  .hamburger{display:flex;}
+  .hero-content{padding:0 16px;}
+  .hero-side,.hero-badge{display:none;}
+  .hero h1{font-size:clamp(36px,10vw,50px)!important;}
+  .sec,.gsec,.lsec{padding:50px 16px;}
+  .stitle{font-size:clamp(32px,8vw,42px)!important;}
+  .ssub{font-size:15px;}
+  .cgrid{grid-template-columns:1fr;height:auto;}
+  .citem:first-child{grid-row:span 1;}
+  .citem{min-height:180px;}
+  .cname{font-size:22px;}
+  .lsec{grid-template-columns:1fr;gap:30px;}
+  .limg:first-child{margin-top:0;}
+  .rgrid{grid-template-columns:1fr;}
+  .rcard{padding:28px;}
+  .igrid{grid-template-columns:repeat(2,1fr);gap:8px;}
+  .ggrid{grid-template-columns:1fr;}
+  .gitem:nth-child(1),.gitem:nth-child(6),.gitem:nth-child(11){grid-column:span 1;aspect-ratio:1;}
+  .fgrid{grid-template-columns:1fr;gap:30px;}
+  footer{padding:60px 16px 30px;}
+  .shop-hero{padding:40px 16px;}
+  .shop-hero h1{font-size:48px;}
+  .shop-layout{grid-template-columns:1fr;}
+  .shop-sidebar{display:none;}
+  .shop-main{padding:24px 16px;}
+  .pdpage{grid-template-columns:1fr;}
+  .pgal{position:relative;top:0;height:70vw;}
+  .pdi{padding:40px 16px;}
+  .pdn{font-size:32px!important;}
+  .pds{font-size:16px;}
+  .pdpr{font-size:32px!important;}
+  .sgrid{gap:6px;}
+  .sbtn{width:48px;height:48px;font-size:11px;}
+  .chkgrid{grid-template-columns:1fr;}
+  .chkpage{padding:100px 16px 50px;}
+  .sthdr{flex-direction:column;align-items:flex-start;}
+  .fgrid2{grid-template-columns:1fr;}
+  .fgroup.full{grid-column:span 1;}
+  .adpage{grid-template-columns:1fr;}
+  .adside{display:none;}
+  .adsgrid{grid-template-columns:1fr;}
+  .cwin{width:100%;right:0;bottom:0;height:100%;}
+  .pgrid{grid-template-columns:1fr;}
+  .cart-sidebar{width:100%;}
+  .mnl{font-size:clamp(28px,8vw,36px);}
+  .lb-masonry{columns:1;padding:0 16px 60px;}
+  .cfab{bottom:20px;right:20px;width:52px;height:52px;}
+}
+
+/* Extra Small Mobile (0 - 374px) */
+@media(max-width:374px){
+  .nav-logo{font-size:16px;letter-spacing:3px;}
+  .hero h1{font-size:32px!important;}
+  .stitle{font-size:28px!important;}
+  .shop-hero h1{font-size:36px;}
+  .pdn{font-size:26px!important;}
+  .pdpr{font-size:28px!important;}
+  .cftitle{font-size:36px;}
 }
 /* LOOKBOOK */
 .lb-hero{padding:120px 64px 60px;text-align:center;background:linear-gradient(to bottom,rgba(255,107,53,.07),transparent);}
@@ -560,6 +764,11 @@ footer{background:var(--black);border-top:1px solid var(--gray-mid);padding:80px
 </style>
 </head>
 <body>
+<!-- PAGE TRANSITION OVERLAY -->
+<div class="page-transition-overlay" id="pageTransition">
+  <div class="page-transition-text" id="transitionText">LOADING...</div>
+</div>
+
 <div class="cursor" id="cursor"></div>
 <div class="cursor-ring" id="curRing"></div>
 
@@ -815,12 +1024,12 @@ footer{background:var(--black);border-top:1px solid var(--gray-mid);padding:80px
   <section class="sec fi" id="reviews" style="background:linear-gradient(180deg,var(--gray) 0%,var(--navy) 100%)">
     <div class="sh"><div class="st">// What They're Saying</div><h2 class="ss">CUSTOMER LOVE</h2></div>
     <div class="rgrid">
-      <div class="rcard"><div class="rq">"</div><p class="rt">The quality is insane for the price. Got the Reality tee and everyone keeps asking where I got it. Plug City is a movement fr 🔥</p><div class="rinfo"><div class="rav">TK</div><div><div class="rname">Tunde K.</div><div class="rstar">★★★★★</div></div></div></div>
-      <div class="rcard"><div class="rq">"</div><p class="rt">Ordered the Skull Logo tee on a Tuesday, had it by Thursday. Fast delivery and it came neatly packed. Will be ordering again soon!</p><div class="rinfo"><div class="rav">AA</div><div><div class="rname">Amaka A.</div><div class="rstar">★★★★★</div></div></div></div>
-      <div class="rcard"><div class="rq">"</div><p class="rt">Wore the Don't Look Back tee to an event and got so many compliments. Plug City is that brand. Lagos streets love it!</p><div class="rinfo"><div class="rav">CE</div><div><div class="rname">Chisom E.</div><div class="rstar">★★★★★</div></div></div></div>
-      <div class="rcard"><div class="rq">"</div><p class="rt">The oversized fit is perfect. I got XL and it drapes exactly how I wanted. Premium cotton, the print hasn't faded after many washes.</p><div class="rinfo"><div class="rav">OB</div><div><div class="rname">Obinna B.</div><div class="rstar">★★★★★</div></div></div></div>
-      <div class="rcard"><div class="rq">"</div><p class="rt">Best streetwear brand in Nigeria hands down. The AI chat helped me pick the right size and the outfit recommendations were 🔥</p><div class="rinfo"><div class="rav">FD</div><div><div class="rname">Fatima D.</div><div class="rstar">★★★★★</div></div></div></div>
-      <div class="rcard"><div class="rq">"</div><p class="rt">I rep Plug City everywhere. Wore it in Paris and people were asking about the brand. Nigeria to the world!</p><div class="rinfo"><div class="rav">KO</div><div><div class="rname">Kunle O.</div><div class="rstar">★★★★★</div></div></div></div>
+      <div class="rcard"><div class="rq">"</div><p class="rt">The quality is insane for the price. Got the Reality tee and everyone keeps asking where I got it. Plug City is a movement fr 🔥</p><div class="rinfo"><div class="rav">A</div><div><div class="rname">Austin.</div><div class="rstar">★★★★★</div></div></div></div>
+      <div class="rcard"><div class="rq">"</div><p class="rt">Ordered the Skull Logo tee on a Tuesday, had it by Thursday. Fast delivery and it came neatly packed. Will be ordering again soon!</p><div class="rinfo"><div class="rav">TT</div><div><div class="rname">Tom.Turner</div><div class="rstar">★★★★★</div></div></div></div>
+      <div class="rcard"><div class="rq">"</div><p class="rt">Wore the Don't Look Back tee to an event and got so many compliments. Plug City is that brand. Lagos streets love it!</p><div class="rinfo"><div class="rav">DYP</div><div><div class="rname">DYP</div><div class="rstar">★★★★★</div></div></div></div>
+      <div class="rcard"><div class="rq">"</div><p class="rt">The oversized fit is perfect. I got XL and it drapes exactly how I wanted. Premium cotton, the print hasn't faded after many washes.</p><div class="rinfo"><div class="rav">G</div><div><div class="rname">Gabriel.</div><div class="rstar">★★★★★</div></div></div></div>
+      <div class="rcard"><div class="rq">"</div><p class="rt">Best streetwear brand in Nigeria hands down. The AI chat helped me pick the right size and the outfit recommendations were 🔥</p><div class="rinfo"><div class="rav">E</div><div><div class="rname">Ephraim</div><div class="rstar">★★★★★</div></div></div></div>
+      <div class="rcard"><div class="rq">"</div><p class="rt">I rep Plug City everywhere. Wore it in Paris and people were asking about the brand. Nigeria to the world!</p><div class="rinfo"><div class="rav">M</div><div><div class="rname">MERIT.</div><div class="rstar">★★★★★</div></div></div></div>
     </div>
   </section>
 
@@ -868,7 +1077,7 @@ footer{background:var(--black);border-top:1px solid var(--gray-mid);padding:80px
       <div>
         <div class="fhdr">JOIN THE CITY</div>
         <p style="font-family:var(--ff-m);font-size:10px;color:var(--gray-light);letter-spacing:1px;margin-bottom:16px;line-height:1.8">Get early access to drops, exclusive promos and style content.</p>
-        <div class="finput"><input type="email" placeholder="your@email.com" style="background:none;border:none;color:var(--white);font-family:var(--ff-m);font-size:11px;width:100%;outline:none;"><button onclick="ST2('✓ Subscribed! Welcome to the city 🔥')" style="background:var(--accent);border:none;color:#000;font-family:var(--ff-m);font-size:11px;letter-spacing:2px;padding:0 16px;cursor:pointer;">GO</button></div>
+        <div class="finput"><input type="email" placeholder="plugcity14@gmail.com" style="background:none;border:none;color:var(--white);font-family:var(--ff-m);font-size:11px;width:100%;outline:none;"><button onclick="ST2('✓ Subscribed! Welcome to the city 🔥')" style="background:var(--accent);border:none;color:#000;font-family:var(--ff-m);font-size:11px;letter-spacing:2px;padding:0 16px;cursor:pointer;">GO</button></div>
       </div>
     </div>
     <div class="fbot">
@@ -1046,7 +1255,9 @@ footer{background:var(--black);border-top:1px solid var(--gray-mid);padding:80px
   <div class="cfooter" id="cfooter">
     <div class="prow"><input class="promo" id="promoInp" placeholder="PROMO CODE" style="background:var(--gray-mid);border:1px solid var(--gray-mid);color:var(--white);padding:10px 14px;font-family:var(--ff-m);font-size:11px;letter-spacing:2px;flex:1;outline:none"><button class="pabtn" onclick="AP()">APPLY</button></div>
     <div id="promoMsg" style="font-family:var(--ff-m);font-size:10px;color:var(--teal);padding:4px 0;min-height:18px"></div>
-    <div class="ctot"><span>TOTAL</span><span id="cartTot">₦0</span></div>
+    <div class="ctr"><span>Subtotal</span><span id="cartSubtotal">₦0</span></div>
+    <div class="ctr"><span>Shipping</span><span>₦2,000</span></div>
+    <div class="ctr tot"><span>TOTAL</span><span id="cartTot">₦0</span></div>
     <button class="cfbtn" onclick="SP('checkout');TC()">CHECKOUT →</button>
   </div>
 </div>
@@ -1145,11 +1356,11 @@ const PRODS=[
 ];
 
 const ORDERS=[
-  {id:1,pid:2,name:'Chisom E.',item:'PL City UG Tee - Black - M',qty:1,total:20000,status:'delivered',date:'2025-01-14',phone:'+234 812 345 6789'},
-  {id:2,pid:9,name:'Tunde K.',item:'Plug City Originals - White - L',qty:2,total:38000,status:'processing',date:'2025-01-15',phone:'+234 803 456 7890'},
-  {id:3,pid:3,name:'Amaka A.',item:'Basketball Astronaut 14 - XL',qty:1,total:26000,status:'shipped',date:'2025-01-16',phone:'+234 907 567 8901'},
-  {id:4,pid:10,name:'Obinna B.',item:'Reality Tee Black - M',qty:1,total:24000,status:'delivered',date:'2025-01-17',phone:'+234 705 678 9012'},
-  {id:5,pid:13,name:'Fatima D.',item:"You Can't Be Me - L",qty:1,total:23000,status:'pending',date:'2025-01-18',phone:'+234 816 789 0123'},
+  {id:1,pid:2,name:'Austin.',item:'PL City UG Tee - Black - M',qty:1,total:20000,status:'delivered',date:'2025-01-14',phone:'+234 812 345 6789'},
+  {id:2,pid:9,name:'DYP.',item:'Plug City Originals - White - L',qty:2,total:38000,status:'processing',date:'2025-01-15',phone:'+234 803 456 7890'},
+  {id:3,pid:3,name:'Ephraim.',item:'Basketball Astronaut 14 - XL',qty:1,total:26000,status:'shipped',date:'2025-01-16',phone:'+234 907 567 8901'},
+  {id:4,pid:10,name:'Gabriel.',item:'Reality Tee Black - M',qty:1,total:24000,status:'delivered',date:'2025-01-17',phone:'+234 705 678 9012'},
+  {id:5,pid:13,name:'Tom.Turner.',item:"You Can't Be Me - L",qty:1,total:23000,status:'pending',date:'2025-01-18',phone:'+234 816 789 0123'},
 ];
 
 let cart=[],wish=[],dFee=2000,disc=0,promoUsed=false,curProd=null,chatOpen=false,chatHist=[];
@@ -1175,13 +1386,13 @@ function ST(id){SP('home');setTimeout(()=>{const e=document.getElementById(id);i
 function RC2(p,g){
   const c=document.createElement('div');c.className='pcard';
   const bk=p.backImg||p.img;
-  c.innerHTML=`<div class="pimg" style="position:relative;overflow:hidden;">
-    <img class="pimg-f" src="${p.img}" alt="${p.name} Front" loading="lazy" style="width:100%;display:block;transition:opacity .45s,transform .5s;">
-    <img class="pimg-b" src="${bk}" alt="${p.name} Back" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .45s,transform .5s;">
+  c.innerHTML=`<div class="pimg" style="position:relative;overflow:hidden;background:#000;padding:15px;">
+    <img class="pimg-f" src="${p.img}" alt="${p.name} Front" loading="lazy" style="width:100%;height:100%;object-fit:contain;display:block;transition:opacity .45s,transform .5s;">
+    <img class="pimg-b" src="${bk}" alt="${p.name} Back" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;padding:15px;opacity:0;transition:opacity .45s,transform .5s;">
     ${p.badge?`<div class="pbadge">${p.badge}</div>`:''}
-    <div class="pfb-tags" style="position:absolute;bottom:8px;left:8px;display:flex;gap:4px;z-index:3;">
-      <span class="pfb-f" style="background:var(--accent);color:#000;font-family:var(--ff-m);font-size:7px;letter-spacing:2px;padding:3px 8px;transition:opacity .3s;">FRONT</span>
-      <span class="pfb-b" style="background:var(--teal);color:#000;font-family:var(--ff-m);font-size:7px;letter-spacing:2px;padding:3px 8px;opacity:0;transition:opacity .3s;">BACK</span>
+    <div class="pfb-tags" style="position:absolute;bottom:12px;left:12px;display:flex;gap:6px;z-index:3;">
+      <span class="pfb-f" style="background:var(--accent);color:#000;font-family:var(--ff-m);font-size:8px;letter-spacing:2px;padding:4px 10px;transition:opacity .3s;font-weight:700;">◆ FRONT</span>
+      <span class="pfb-b" style="background:var(--teal);color:#fff;font-family:var(--ff-m);font-size:8px;letter-spacing:2px;padding:4px 10px;opacity:0;transition:opacity .3s;font-weight:700;">◆ BACK</span>
     </div>
     <div class="poverlay"><button class="obtn" onclick="event.stopPropagation();QA(${p.id})">QUICK ADD</button><button class="obtn2" onclick="event.stopPropagation();OP(${p.id})">VIEW</button></div>
   </div>
@@ -1198,7 +1409,7 @@ function RC2(p,g){
   const bi=c.querySelector('.pimg-b');
   const fl=c.querySelector('.pfb-f');
   const bl=c.querySelector('.pfb-b');
-  pd.addEventListener('mouseenter',()=>{fi.style.opacity='0';fi.style.transform='scale(1.06)';bi.style.opacity='1';bi.style.transform='scale(1.06)';if(fl)fl.style.opacity='0';if(bl)bl.style.opacity='1';});
+  pd.addEventListener('mouseenter',()=>{fi.style.opacity='0';fi.style.transform='scale(1.08)';bi.style.opacity='1';bi.style.transform='scale(1.08)';if(fl)fl.style.opacity='0';if(bl)bl.style.opacity='1';});
   pd.addEventListener('mouseleave',()=>{fi.style.opacity='1';fi.style.transform='scale(1)';bi.style.opacity='0';bi.style.transform='scale(1)';if(fl)fl.style.opacity='1';if(bl)bl.style.opacity='0';});
   c.onclick=()=>OP(p.id);g.appendChild(c);
 }
@@ -1244,10 +1455,38 @@ function UCU(){
   if(cnt){cnt.textContent=total;cnt.classList.toggle('hidden',total===0);}
   const ci=document.getElementById('cartItems');
   if(ci){
-    if(cart.length===0){ci.innerHTML='<div style="text-align:center;padding:60px 24px;color:var(--gray-light);font-family:var(--ff-m);font-size:11px;letter-spacing:2px">YOUR BAG IS EMPTY</div>';}
-    else{ci.innerHTML=cart.map(item=>`<div class="citem"><img src="${item.img}" style="width:70px;aspect-ratio:3/4;object-fit:cover"><div class="ci-info"><div class="ci-name">${item.name}</div><div class="ci-meta">Size ${item.size} · ₦${item.price.toLocaleString()}</div><div class="cqty"><button onclick="UQ(${item.id},'${item.size}',-1)">−</button><span>${item.qty}</span><button onclick="UQ(${item.id},'${item.size}',1)">+</button></div></div><button onclick="RI(${item.id},'${item.size}')" style="background:none;border:none;color:var(--gray-light);cursor:pointer;font-size:18px;padding:4px">✕</button></div>`).join('');}
+    if(cart.length===0){
+      ci.innerHTML='<div class="cempty"><div class="cempty-icon">🛍️</div><p>YOUR BAG IS EMPTY</p></div>';
+    }
+    else{
+      ci.innerHTML=cart.map(item=>{
+        return `
+          <div class="citem2">
+            <div class="cimg2">
+              <img src="${item.img}" alt="${item.name}">
+            </div>
+            <div class="cdet">
+              <div class="cname2">${item.name}</div>
+              <div class="cmeta2">Size ${item.size}</div>
+              <div class="cprice2">₦${item.price.toLocaleString()}</div>
+              <div class="cctrl">
+                <button class="cqbtn" onclick="UQ(${item.id},'${item.size}',-1)">−</button>
+                <div class="cqty">${item.qty}</div>
+                <button class="cqbtn" onclick="UQ(${item.id},'${item.size}',1)">+</button>
+                <button class="crm" onclick="RI(${item.id},'${item.size}')">Remove</button>
+              </div>
+            </div>
+          </div>`;
+      }).join('');
+    }
   }
-  const ct=document.getElementById('cartTot');if(ct)ct.textContent='₦'+(tot*(1-disc/100)).toLocaleString();
+  // Update cart totals
+  const subtotalEl = document.getElementById('cartSubtotal');
+  if(subtotalEl) subtotalEl.textContent='₦'+tot.toLocaleString();
+  
+  const ct=document.getElementById('cartTot');
+  const finalTotal = tot*(1-disc/100) + 2000; // Add shipping
+  if(ct)ct.textContent='₦'+finalTotal.toLocaleString();
 }
 function UQ(id,size,d){const i=cart.find(c=>c.id===id&&c.size===size);if(i){i.qty+=d;if(i.qty<=0)cart=cart.filter(c=>!(c.id===id&&c.size===size));}UCU();}
 function RI(id,size){cart=cart.filter(c=>!(c.id===id&&c.size===size));UCU();}
@@ -1394,14 +1633,31 @@ function ILB(){
   });
 }
 function SP(n){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  const pg=document.getElementById('page-'+n);
-  if(pg)pg.classList.add('active');
-  window.scrollTo(0,0);
-  if(n==='shop'){RS(PRODS);}
-  if(n==='admin'){RA();}
-  if(n==='checkout'){RC();}
-  if(n==='lookbook'){setTimeout(ILB,100);}
+  const overlay = document.getElementById('pageTransition');
+  const transitionText = document.getElementById('transitionText');
+  
+  // Show transition overlay
+  if(overlay){
+    overlay.classList.add('active');
+    if(transitionText) transitionText.textContent = n.toUpperCase() + '...';
+  }
+  
+  // Wait for transition, then change page
+  setTimeout(() => {
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    const pg=document.getElementById('page-'+n);
+    if(pg)pg.classList.add('active');
+    window.scrollTo(0,0);
+    if(n==='shop'){RS(PRODS);}
+    if(n==='admin'){RA();}
+    if(n==='checkout'){RC();}
+    if(n==='lookbook'){setTimeout(ILB,100);}
+    
+    // Hide transition overlay
+    setTimeout(() => {
+      if(overlay) overlay.classList.remove('active');
+    }, 300);
+  }, 500);
 }
 function AM(msg,role){
   const d=document.createElement('div');
@@ -1454,10 +1710,10 @@ document.querySelectorAll('a,button,[onclick]').forEach(el=>{
 function loadIG(){
   const g=document.getElementById('igrid');if(!g)return;
   const posts=PRODS.filter(p=>p.cat==='Tee').slice(0,6);
-  g.innerHTML=posts.map(p=>`<div style="position:relative;overflow:hidden;cursor:pointer;aspect-ratio:1;background:#111;" onclick="OP(${p.id})"><img src="${p.img}" style="width:100%;height:100%;object-fit:cover;transition:transform .4s"><div style="position:absolute;inset:0;background:rgba(0,0,0,.5);opacity:0;transition:opacity .3s;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:6px"><span style="color:white;font-family:var(--ff-d);letter-spacing:3px">SHOP NOW</span><span style="color:#FFD700;font-size:12px">★★★★★</span></div></div>`).join('');
-  g.querySelectorAll('div').forEach(card=>{
-    card.onmouseenter=()=>{card.querySelector('img').style.transform='scale(1.1)';card.querySelector('div:last-child').style.opacity='1';};
-    card.onmouseleave=()=>{card.querySelector('img').style.transform='scale(1)';card.querySelector('div:last-child').style.opacity='0';};
+  g.innerHTML=posts.map(p=>`<div class="iitem" onclick="OP(${p.id})"><img src="${p.img}" alt="${p.name}" style="width:100%;height:100%;object-fit:contain;padding:10px;background:#000;transition:transform .4s"><div class="iov" style="position:absolute;inset:0;background:rgba(255,107,53,.75);opacity:0;transition:opacity .3s;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px"><span style="color:white;font-family:var(--ff-d);letter-spacing:4px;font-size:16px">SHOP NOW</span><span style="color:#FFD700;font-size:14px">★★★★★</span></div></div>`).join('');
+  g.querySelectorAll('.iitem').forEach(card=>{
+    card.onmouseenter=()=>{const img=card.querySelector('img');const ov=card.querySelector('.iov');if(img)img.style.transform='scale(1.05)';if(ov)ov.style.opacity='1';};
+    card.onmouseleave=()=>{const img=card.querySelector('img');const ov=card.querySelector('.iov');if(img)img.style.transform='scale(1)';if(ov)ov.style.opacity='0';};
   });
 }
 
@@ -1612,6 +1868,11 @@ function initGallery() {
 
 // INITIALIZATION
 document.addEventListener('DOMContentLoaded',function(){
+  // Fade in body
+  setTimeout(() => {
+    document.body.classList.add('loaded');
+  }, 100);
+  
   SP('home');
   RF();
   loadIG();
